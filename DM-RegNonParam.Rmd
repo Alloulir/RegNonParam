@@ -1,0 +1,16 @@
+---
+title: "DM-RegNonParam"
+author: "Reda Allouli"
+date: "05/01/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r cars}
+summary(cars)
+```
+

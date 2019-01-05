@@ -5,12 +5,60 @@ date: "05/01/2019"
 output: pdf_document
 ---
 
+# Introduction
+
+
+On dispose d’un jeu de donnéees (Xi,Yi)1≤i≤104 ou les Xi et les Yi sont idéealiséees comme des réalisations de variables aléeatoires réelles admettant la représentation Yi =r(Xi)+ξi, i=1,...104,
+ou les ξi sont indépendantes et identiquement distribuées, admettant une densité μ vérifiant E[ξ] = 0 et E[ξ^2] = σ2 > 0. 
+Les Xi sont indépendantes et identiquement distribuées de densité g : [0,1] → R, et indépendantes des ξi. La fonction r : [0,1] → R vérifie |r(x)| ≤ 6 pour tout x ∈ [0, 1].
+Les objectifs sont :
+1. Reconstruire x 􏱩→ g(x) graphiquement et  ́etudier si g est la densit ́e uniform 
+2. Reconstruire x 􏱩→ r(x) graphiquement.
+3. Explorer les propriétés de x 􏱩→ μ(x) et estimer σ2.
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Import de données
 
-```{r cars}
-summary(cars)
+```{r}
+DataReg <- read.csv("/Users/moi/Documents/CoursDauphine/Module2/RegNonParam/data/DataReg.csv")
+str(DataReg)
+# summary(DataReg)
+attach(DataReg)
+
+```
+
+
+# Exploration des propriétés de g(x)
+## Fonction de calcul de la fenêtre de lissage par validation croiée
+
+La fonction J ci-dessous calcul les 
+```{r}
+J=function(h){
+  fhat=Vectorize(function(x) density(X,kernel="epanechnikov",from=x,to=x,n=1,bw=h)$y)
+  fhati=Vectorize(function(i) density(X[-i],kernel="epanechnikov",from=X[i],to=X[i],n=1,bw=h)$y)
+  F=fhati(1:length(X))
+  #f <- function(x) integrate(function(x) fhat(x)^2,-Inf,Inf)$value-2*mean(F)
+  #print(optimise(integrate(function(x) fhat(x)^2,-Inf,Inf)$value-2*mean(F), c(0, 1), tol = 0.001))
+  return(integrate(function(x) fhat(x)^2,-Inf,Inf)$value-2*mean(F))
+   }
+
+```
+
+## Calcul de la fenêtre de lissage par validation croiée
+
+```{r}
+vx=seq(.1,1,by=.01)
+vy=Vectorize(J)(vx)
+df=data.frame(vx,vy)
+library(ggplot2)
+qplot(vx,vy,geom="line",data=df)
+```
+
+```{r}
+
 ```
 
